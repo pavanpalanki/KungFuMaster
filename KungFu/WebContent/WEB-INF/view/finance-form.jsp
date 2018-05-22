@@ -26,7 +26,7 @@
 		<div>
 			<h2>Welcome ${student.firstName} ${student.lastName}</h2>
 		</div>	
-		
+
 		
 		<table>
 				<tr>

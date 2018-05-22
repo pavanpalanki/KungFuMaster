@@ -4,6 +4,8 @@ import java.sql.Date;
 
 public class FinanceAttributes {
 	
+	private int studentId;
+	
 	private String category;
 	
 	private String subCategory;
@@ -16,12 +18,23 @@ public class FinanceAttributes {
 		
 	}
 
-	public FinanceAttributes(String category, String subCategory, long fees, Date datePaid) {
+	public FinanceAttributes(int studentId, String category, String subCategory, long fees, Date datePaid) {
 		super();
+		this.studentId = studentId;
 		this.category = category;
 		this.subCategory = subCategory;
 		this.fees = fees;
 		this.datePaid = datePaid;
+	}
+
+	
+
+	public int getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
 	}
 
 	public String getCategory() {
@@ -54,6 +67,12 @@ public class FinanceAttributes {
 
 	public void setDatePaid(Date datePaid) {
 		this.datePaid = datePaid;
+	}
+
+	@Override
+	public String toString() {
+		return "FinanceAttributes [studentId=" + studentId + ", category=" + category + ", subCategory=" + subCategory
+				+ ", fees=" + fees + ", datePaid=" + datePaid + "]";
 	}
 	
 }

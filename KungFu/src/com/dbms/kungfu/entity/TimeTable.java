@@ -82,7 +82,13 @@ public class TimeTable {
 		this.rank = rank;
 	}
 
-	
+	public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
+	}
 
 	public String getTime() {
 		return time;

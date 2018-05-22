@@ -22,73 +22,63 @@
 	
 	<div id="container">
 		<div id="content">
-<label><b><u>Student Details</u></b></label><br/><br/>
-			<table>
-					<tr><td align="left">Student Id: ${theStudent.id}</td> </tr>
-					<tr><td align="left">Student Name: ${theStudent.firstName} ${theStudent.lastName} </td></tr>
-					<tr><td align="left">Student dob: ${theStudent.dob} </td></tr>
-					<tr><td align="left">Student joinDate: ${theStudent.joinDate} </td></tr>
-					<tr><td align="left">Student	mobile: ${theStudent.mobile} </td></tr>
-					<tr><td align="left">Student email: ${theStudent.email}</td></tr>
-					<tr><td align="left">Student Address: ${theStudent.doorNo}, ${theStudent.street}, ${theStudent.city}, ${theStudent.province}, ${theStudent.postalCode}</td></tr>
-					<tr><td align="left">Primary Contact Name: ${theStudent.primaryContact}</td></tr>
-					<tr><td align="left">Secondary Contact Name: ${theStudent.secondaryContact}</td></tr>
-			</table>
-			<label>
-				<a href="${pageContext.request.contextPath}/student/list" style="margin-top: 45px;width: 120px;float: left;">Back to list</a>
-			</label>
-			<label>		
-				<a href="${pageContext.request.contextPath}/student/getStudentFinances" style="margin-top: 45px;width: 120px;float: left;">Finance Details</a>
-			</label>
-			<label>
-				<a href="${pageContext.request.contextPath}/student/getStudentAttendance" style="margin-top: 45px;width: 120px;float: left;">Attendance Details</a>
-			</label>		
-				<%--<br/><br/><br/><label><b>Financial Details</b></label>
+				<label><b><u>Student Details</u></b></label><br />
+				<br />
 				<table>
-				<tr>
-					
-						<table>
-							
-							<tr>
-								<th>Category</th>
-								<th>Sub Category</th>
-								<th>fees</th>
-								<th>Date Paid</th>
-							</tr>
-							<c:forEach var="tmpAccountSummary" items="${theAccountSummary}" >
-							<tr>
-								<td>${tmpAccountSummary.category}</td>
-								<td>${tmpAccountSummary.subCategory}</td>
-								<td>${tmpAccountSummary.fees}$</td>
-								<td>${tmpAccountSummary.datePaid}</td>
-							</tr>
-							</c:forEach>
-						</table>				
-				</tr>
-				 <br/><label><b>Attendance Details</b></label>	
-				<tr>
-					<table>
+					<tr>
+						<td align="left">Student Id: ${theStudent.id}</td>
+					</tr>
+					<tr>
+						<td align="left">Student Name: ${theStudent.firstName}
+							${theStudent.lastName}</td>
+					</tr>
+					<tr>
+						<td align="left">Student dob: ${theStudent.dob}</td>
+					</tr>
+					<tr>
+						<td align="left">Student joinDate: ${theStudent.joinDate}</td>
+					</tr>
+					<tr>
+						<td align="left">Student mobile: ${theStudent.mobile}</td>
+					</tr>
+					<tr>
+						<td align="left">Student email: ${theStudent.email}</td>
+					</tr>
+					<tr>
+						<td align="left">Student Address: ${theStudent.doorNo},
+							${theStudent.street}, ${theStudent.city}, ${theStudent.province},
+							${theStudent.postalCode}</td>
+					</tr>
+					<tr>
+						<td align="left">Primary Contact Name:
+							${theStudent.primaryContact}</td>
+					</tr>
+					<tr>
+						<td align="left">Secondary Contact Name:
+							${theStudent.secondaryContact}</td>
+					</tr>
+				</table>
 
-							<tr>
-								<th>Level</th>
-								<th>Rank</th>
-								<th>Level</th>
-								<th>Time</th>
-								<th>DateAttended</th>
-							</tr>
-							<c:forEach var="tmpAttendance" items="${theStudentAttendance}" >
-							<tr>
-								<td>${tmpAttendance.level}</td>
-								<td>${tmpAttendance.rank}</td>
-								<td>${tmpAttendance.day}</td>
-								<td>${tmpAttendance.time}</td>
-								<td>${tmpAttendance.dateAttended}</td>
-							</tr>
-							</c:forEach>
-					</table>
-				</tr> --%>
-			</table>
-			
+				<c:url var="getStudentFinances" value="/student/getStudentFinances">
+					<c:param name="studentId" value="${theStudent.id}"></c:param>
+				</c:url>
+
+				<c:url var="getStudentAttendance"
+					value="/student/getStudentAttendance">
+					<c:param name="studentId" value="${theStudent.id}"></c:param>
+				</c:url>
+				
+				<label> <a
+					href="${pageContext.request.contextPath}/student/list"
+					style="margin-top: 45px; width: 120px; float: left;">Back to
+						list</a>
+				</label> 
+				<label> <a href="${getStudentFinances}">Finance Details</a> </label>
+				 
+				<label> <a href="${getStudentAttendance}">Attendance
+						Details</a>
+				</label>
+
 		</div>
 	</div>
 

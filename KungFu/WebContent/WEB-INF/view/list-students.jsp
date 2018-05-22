@@ -67,19 +67,22 @@
 					<c:param name="studentId" value="${tmpStudent.id}"></c:param>
 				</c:url>				
 
-				<c:url var="updateLink" value="/student/showFormForUpdate">
+				<%-- <c:url var="updateLink" value="/student/showFormForUpdate">
 					<c:param name="studentId" value="${tmpStudent.id}"></c:param>
 				</c:url>
 				
 				<c:url var="deleteLink" value="/student/delete">
 					<c:param name="studentId" value="${tmpStudent.id}"></c:param>
-				</c:url>
+				</c:url> --%>
 				
 				<c:url var="recordAttendance" value="/student/recordAttendance">
 					<c:param name="studentId" value="${tmpStudent.id}"></c:param>
 				</c:url>
 				
 				<c:url var="showFinanceForm" value="/student/showFinanceForm">
+					<c:param name="studentId" value="${tmpStudent.id}"></c:param>
+				</c:url>
+				<c:url var="showAchievementForm" value="/student/showAchievementForm">
 					<c:param name="studentId" value="${tmpStudent.id}"></c:param>
 				</c:url>
 				
@@ -91,17 +94,13 @@
 					<%-- <td>${tmpStudent.dob}</td>
 					<td>${tmpStudent.doorNo},${tmpStudent.street},${tmpStudent.city},${tmpStudent.province},${tmpStudent.postalCode}</td> --%>
 					<td>
-						<a href="${updateLink}">Update</a> 
-						| 
-						<a href="${deleteLink}"
-							onClick="return confirm('Are you sure you want to delete this student?');">
-							Delete</a>
-						|
 						<a href="${recordAttendance}"
 							onClick="return confirm('Are you sure you want to record attendance for this student?');">
 							Record Attendance</a>
 						|
 						<a href="${showFinanceForm}">Add Finance</a>
+						|
+						<a href="${showAchievementForm}">Show/Add Achievement</a>
 					</td>
 				</tr>
 				</c:forEach>

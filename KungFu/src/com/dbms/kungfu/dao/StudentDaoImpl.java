@@ -55,7 +55,7 @@ public class StudentDaoImpl implements StudentDao {
 				theStudent.getPrimaryContactEmail(), theStudent.getSecondaryContact(),
 				theStudent.getSecondaryContactMobile(), theStudent.getSecondaryContactEmail());
 
-		StudentProgress studentProgress = new StudentProgress(level, currentDate);
+		StudentProgress studentProgress = new StudentProgress(level);
 
 		studentProgress.setRank(theRank);
 
@@ -188,6 +188,89 @@ public class StudentDaoImpl implements StudentDao {
 		currentSession.save(theStudent);
 		
 		return theStudent.getFirstName()+" "+theStudent.getLastName();
+	}
+
+	@Override
+	public List<AccountSummary> getStudentAccountSummary(Student theStudent) {
+		// TODO Auto-generated method stub
+		
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		Query query = currentSession.createQuery("from AccountSummary where studentInfo = :student ");
+		
+		query.setParameter("student", theStudent);
+		
+		List<AccountSummary> accounts = query.getResultList();
+		
+		return accounts;
+	}
+
+	@Override
+	public List<StudentAttendance> getStudentAttendanceSummary(Student theStudent) {
+		// TODO Auto-generated method stub
+		
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		Query query = currentSession.createQuery("from StudentAttendance sa where sa.student = :student ");
+		
+		query.setParameter("student", theStudent);
+		
+		List<StudentAttendance> attendance = query.getResultList();
+
+		return attendance;
+	}
+
+	@Override
+	public String awardBelt(int studentId, int progressId)
+			throws com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException {
+		// TODO Auto-generated method stub
+
+		Session currentSession = sessionFactory.getCurrentSession();
+
+		StudentProgress theProgress = currentSession.get(StudentProgress.class, progressId);
+
+		theProgress.setDateAwarded(getCurrentDate());
+
+		theProgress.setLevel("Advanced");
+
+		int rankId = theProgress.getRank().getId() + 1;
+
+		if (rankId < 10) {
+
+			Student theStudent = currentSession.get(Student.class, studentId);
+
+			StudentProgress newProgress = new StudentProgress("Beginner");
+
+			Rank newRank = currentSession.get(Rank.class, theProgress.getRank().getId() + 1);
+			newProgress.setRank(newRank);
+			theStudent.addStudentProgress(newProgress);
+
+			currentSession.save(newProgress);
+
+			currentSession.save(theStudent);
+
+		}
+
+		return "Rank Awarded";
+
+	}
+
+	@Override
+	public List<AccountSummary> searchFinanceRange(Student theStudent, Date fromDate, Date toDate) {
+		// TODO Auto-generated method stub
+
+		Session currentSession = sessionFactory.getCurrentSession();
+
+		Query query = currentSession.createQuery("from AccountSummary where studentInfo = :student and "
+				+ "	datePaid >= :fromDate and datePaid <= :toDate ");
+
+		query.setParameter("student", theStudent);
+		query.setParameter("fromDate", fromDate);
+		query.setParameter("toDate", toDate);
+
+		List<AccountSummary> accounts = query.getResultList();
+
+		return accounts;
 	}
 
 }

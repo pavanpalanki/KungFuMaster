@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name="student")
@@ -24,24 +26,31 @@ public class Student {
 	private int id;
 	
 	@Column(name="stu_first_name")
+	@NotNull(message="is required")
 	private String firstName;
 	
 	@Column(name="stu_last_name")
+	@NotNull(message="is required")
 	private String lastName;
 	
 	@Column(name="stu_dob")
+	@NotNull(message="is required")
 	private String dob;
 	
 	@Column(name="stu_join_date")
 	private Date joinDate;
 	
 	@Column(name="stu_mobile")
+	@NotNull(message="is required")
+	@Pattern(regexp="^[0-9]{10}", message="only 10 digits")
 	private String mobile;
 	
 	@Column(name="stu_email")
+	@NotNull(message="is required")
 	private String email;
 	
 	@Column(name="stu_door_no")
+	@Pattern(regexp="^[0-9]", message="only digits")
 	private int doorNo;
 	
 	@Column(name="stu_street")
@@ -54,6 +63,7 @@ public class Student {
 	private String province;
 	
 	@Column(name="stu_postal_code")
+	@Pattern(regexp="^[a-zA-Z0-9]{5}", message="only 5 chars/digits")
 	private String postalCode;
 	
 	@Column(name="stu_primary_contact")
@@ -74,7 +84,7 @@ public class Student {
 	@Column(name="stu_secondary_contact_email")
 	private String secondaryContactEmail;
 	
-	@OneToMany(mappedBy="student", 
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="student", 
 			cascade={CascadeType.DETACH,CascadeType.MERGE,
 					CascadeType.PERSIST,CascadeType.REFRESH})
 	private List<StudentProgress> studentProgress;
@@ -99,7 +109,7 @@ public class Student {
 		theStudentAttendance.setStudent(this);
 	}
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="studentInfo", 
+	@OneToMany(mappedBy="studentInfo", 
 			cascade={CascadeType.ALL})
 	private List<AccountSummary> accountSummary;
 	

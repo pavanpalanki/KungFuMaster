@@ -5,6 +5,7 @@ import java.sql.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class StudentProgress {
 	@JoinColumn(name="stu_id")
 	private Student student;
 	
-	@ManyToOne(cascade={CascadeType.ALL})
+	@ManyToOne(fetch=FetchType.EAGER,cascade={CascadeType.ALL})
 	@JoinColumn(name="stu_rank")
 	private Rank rank;
 	
@@ -45,6 +46,11 @@ public class StudentProgress {
 
 		this.level = level;
 		this.dateAwarded = dateAwarded;
+	}
+	
+	public StudentProgress(String level) {
+
+		this.level = level;
 	}
 
 

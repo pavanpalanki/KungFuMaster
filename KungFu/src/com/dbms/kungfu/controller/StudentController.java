@@ -1,17 +1,23 @@
 package com.dbms.kungfu.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.dbms.kungfu.entity.AccountSummary;
 import com.dbms.kungfu.entity.AttendanceAttributes;
 import com.dbms.kungfu.entity.FinanceAttributes;
+import com.dbms.kungfu.entity.ProgressAttributes;
 import com.dbms.kungfu.entity.ServiceCatalogue;
 import com.dbms.kungfu.entity.Student;
 import com.dbms.kungfu.entity.StudentAttendance;
+import com.dbms.kungfu.entity.StudentProgress;
 import com.dbms.kungfu.service.FinanceService;
 import com.dbms.kungfu.service.StudentService;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 @Controller
 @RequestMapping("/student")
@@ -65,47 +74,15 @@ public class StudentController {
 			Model theModel){		
 		
 		Student theStudent = studentService.getStudentDetails(studentId);
-		
-		List<AccountSummary> theAccountSummary = theStudent.getAccountSummary();
-		
-		//List<StudentAttendance> theStudentAttendance = theStudent.getStudentAttendance();
-		
-		List<FinanceAttributes> finances = new ArrayList<>();
-		
-		List<AttendanceAttributes> attendance = new ArrayList<>();
-		
-		for(AccountSummary acc : theAccountSummary){
-			
-			FinanceAttributes tmpFin = new FinanceAttributes();
-			tmpFin.setCategory(acc.getServiceCatalogue().getCategory());
-			tmpFin.setSubCategory(acc.getServiceCatalogue().getSubCategory());
-			tmpFin.setFees(acc.getServiceCatalogue().getFees());
-			tmpFin.setDatePaid(acc.getDatePaid());
-			finances.add(tmpFin);
-		
-		}
-		
-		/*for(StudentAttendance attend : theStudentAttendance){
-			
-			AttendanceAttributes tmpAtt = new AttendanceAttributes();
-			tmpAtt.setLevel(attend.getTimeTable().getLevel());
-			tmpAtt.setRank(attend.getTimeTable().getRank());
-			tmpAtt.setLevel(attend.getTimeTable().getLevel());
-			tmpAtt.setTime(attend.getTimeTable().getTime());
-			tmpAtt.setDateAttended(attend.getDateAttended());
-			
-		}*/
-		
-		theModel.addAttribute("theStudent",theStudent);
-		theModel.addAttribute("theAccountSummary",finances);
-		//theModel.addAttribute("theStudentAttendance",attendance);
+
+		theModel.addAttribute("theStudent",theStudent);		
 		
 		return "student-details";
 	}
 	
 	@PostMapping("/saveStudent")
-	public String saveStudent(@ModelAttribute("theStudent") Student theStudent, 
-			HttpServletRequest request){
+	public String saveStudent(@Valid @ModelAttribute("theStudent") Student theStudent, 
+			HttpServletRequest request, BindingResult theBindingResult){
 		
 		String level= request.getParameter("level");
 		
@@ -113,7 +90,12 @@ public class StudentController {
 		
 		studentService.saveStudent(theStudent,rank,level);
 		
-		return "redirect:/student/list";
+		if (theBindingResult.hasErrors()) {
+			return "student-form";
+		}
+		else {
+			return "redirect:/student/list";
+		}
 	}
 	
 	@GetMapping("/recordAttendance")
@@ -161,6 +143,31 @@ public class StudentController {
 		
 	}	
 	
+	@GetMapping("/showAchievementForm")
+	public String showAchievementForm(@ModelAttribute("studentId") int studentId
+				,Model theModel){
+		
+		Student theStudent = studentService.getStudentDetails(studentId);
+
+		List<ProgressAttributes> theStudentProgress = studentService.getStudentProgressSummary(theStudent);
+		
+		theModel.addAttribute("theStudentProgress", theStudentProgress);
+				
+		return "student-progress-form";				
+		
+	}
+	
+	@PostMapping("/awardBelt")
+	public String awardBelt(@ModelAttribute("progressId") int progressId
+			 ,@ModelAttribute("studentId") int studentId, Model theModel) throws MySQLIntegrityConstraintViolationException{
+		
+
+		String result = studentService.awardBelt(studentId,progressId);
+		
+		return "redirect:/student/list?result="+result;				
+		
+	}
+	
 	@GetMapping("/addFinance")
 	public String addFinance(@ModelAttribute("studentId") int studentId,
 			@ModelAttribute("serviceId") int serviceCatalogueId, Model theModel){
@@ -170,6 +177,59 @@ public class StudentController {
 		
 		return "redirect:/student/list?result="+result;				
 		
+	}
+	
+	@GetMapping("/getStudentFinances")
+	public String getStudentFinances(@ModelAttribute("studentId") int studentId,
+			Model theModel) {
+
+		Student theStudent = studentService.getStudentDetails(studentId);
+
+		List<FinanceAttributes> finances = studentService.getStudentAccountSummary(theStudent);
+
+		theModel.addAttribute("theAccountSummary", finances);
+
+		return "student-finances";
+
+	}
+	
+	@PostMapping("searchFinanceRange")
+	public String searchFinanceRange(@ModelAttribute("studentId") int studentId,
+			@ModelAttribute("fromDate") Date fromDate,
+			@ModelAttribute("toDate") Date toDate,
+			Model theModel) {
+
+		Student theStudent = studentService.getStudentDetails(studentId);		
+
+		List<FinanceAttributes> finances = studentService.searchFinanceRange(theStudent, fromDate, toDate);
+
+		theModel.addAttribute("theAccountSummary", finances);
+
+		return "student-finances";
+
+	}
+	
+	
+	@GetMapping("/getStudentAttendance")
+	public String getStudentAttendance(@ModelAttribute("studentId") int studentId,
+			Model theModel) {
+
+		Student theStudent = studentService.getStudentDetails(studentId);		
+
+		List<AttendanceAttributes> attendance = studentService.getStudentAttendanceSummary(theStudent);
+		
+		theModel.addAttribute("theStudentAttendance", attendance);
+
+		return "student-attendance";
+
+	}
+	
+	@InitBinder
+	public void initBinder(WebDataBinder dataBinder) {
+		
+		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
+		
+		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 
 }

@@ -7,6 +7,10 @@
 <head>
 <title>Add Customers</title>
 
+<style>
+		.error {color:red}
+	</style>
+
 <link type="text/css"
 	rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/style.css">
@@ -49,19 +53,22 @@
 			<table>
 				<tbody>
 					<tr>
-						<td><label>First Name:</label></td>
+						<td><label>First Name	(*):</label></td>
 						<td><form:input path="firstName" /></td>
+						<form:errors path="firstName" cssClass="error" />
 					</tr>
 					<tr>	
-						<td><label>Last Name:</label></td>
+						<td><label>Last Name	(*):</label></td>
 						<td><form:input path="lastName" /></td>
+						<form:errors path="lastName" cssClass="error" />
 					</tr>
 					<tr>
-						<td><label>DOB:</label></td>
+						<td><label>DOB	(*):</label></td>
 						<td><form:input type="date" path="dob"/></td>
+						<form:errors path="dob" cssClass="error" />
 					</tr>
 					<tr>
-						<td><label>Rank:</label></td>
+						<td><label>Rank	(*):</label></td>
 						<td>
 							<select name="rank" style="padding: 6px;border: 1px solid #666;border-radius: 5px;width: 250px;">
 								<option value="1">White</option>
@@ -78,7 +85,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><label>Level:</label></td>
+						<td><label>Level	(*):</label></td>
 						<td>
 							<div><input type="radio" name="level" value="Beginner"> Beginner</div>
   							<div><input type="radio" name="level" value="Intermediate"> Intermediate</div>
@@ -86,16 +93,19 @@
 						</td>
 					</tr>
 					<tr>
-						<td><label>Mobile:</label></td>
+						<td><label>Mobile	(*):</label></td>
 						<td><form:input path="mobile" /></td>
+						<form:errors path="mobile" cssClass="error" />
 					</tr>
 					<tr>	
-						<td><label>Email:</label></td>
+						<td><label>Email	(*):</label></td>
 						<td><form:input path="email" /></td>
+						<form:errors path="email" cssClass="error" />
 					</tr>
 					<tr>	
 						<td><label>Door No:</label></td>
 						<td><form:input path="doorNo" /></td>
+						<form:errors path="doorNo" cssClass="error" />
 					</tr><tr>	
 						<td><label>Street:</label></td>
 						<td><form:input path="street" /></td>
@@ -110,6 +120,7 @@
 					<tr>	
 						<td><label>Postal Code:</label></td>
 						<td><form:input path="postalCode" /></td>
+						<form:errors path="postalCode" cssClass="error" />
 					</tr>
 					<tr>	
 						<td><label>Primary Contact Name:</label></td>
